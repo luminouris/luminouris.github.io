@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/16x16.ico?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/32x32.ico?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="高中学过，所以思路大概还记得，但是代码实现忘了一些，就一些。 先上复杂度，修改为logn，查询为logn，所以复杂度为O（nlogn），比朴素算法的O（n^2)快了不少。应用：主要是区间修改和区间询问。 下面是线段树代码的各个部分 一、建树 先开数组mi[]表示各个节点，第n个节点的左孩子节点为2n，右孩子节点为2n+1，首个节点为1，表示整个区间。 void build(int id,int l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2022寒假集训day4 数据结构之线段树">
+<meta property="og:url" content="http://example.com/2022/01/16/2022%E5%AF%92%E5%81%87%E9%9B%86%E8%AE%ADday4-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%BF%E6%AE%B5%E6%A0%91/index.html">
+<meta property="og:site_name" content="Luminouris&#39; blog">
+<meta property="og:description" content="高中学过，所以思路大概还记得，但是代码实现忘了一些，就一些。 先上复杂度，修改为logn，查询为logn，所以复杂度为O（nlogn），比朴素算法的O（n^2)快了不少。应用：主要是区间修改和区间询问。 下面是线段树代码的各个部分 一、建树 先开数组mi[]表示各个节点，第n个节点的左孩子节点为2n，右孩子节点为2n+1，首个节点为1，表示整个区间。 void build(int id,int l">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/pasted-2.png">
+<meta property="article:published_time" content="2022-01-16T11:14:00.000Z">
+<meta property="article:modified_time" content="2022-01-16T14:34:57.693Z">
+<meta property="article:author" content="Charles Ding">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/pasted-2.png"><title>2022寒假集训day4 数据结构之线段树 | Luminouris' blog</title><link ref="canonical" href="http://example.com/2022/01/16/2022%E5%AF%92%E5%81%87%E9%9B%86%E8%AE%ADday4-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%BF%E6%AE%B5%E6%A0%91/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 6.0.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Luminouris' blog</div><div class="header-banner-info__subtitle">“飞光飞光，劝尔一杯酒。吾不识青天高，黄地厚， 唯见月寒日暖，来煎人寿。食熊则肥，食蛙则瘦。 神君何在，太一安有。”</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">2022寒假集训day4 数据结构之线段树</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2022-01-16</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2022-01-16</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><p>高中学过，所以思路大概还记得，但是代码实现忘了一些，就一些。</p>
+<p>先上复杂度，修改为logn，查询为logn，所以复杂度为O（nlogn），比朴素算法的O（n^2)快了不少。<br>应用：主要是区间修改和区间询问。</p>
+<p>下面是线段树代码的各个部分</p>
+<p>一、建树</p>
+<p>先开数组mi[]表示各个节点，第n个节点的左孩子节点为2<em>n，右孩子节点为2</em>n+1<br>，首个节点为1，表示整个区间。</p>
+<pre><code>void build(int id,int l,int r)
+&#123;
+        if(l==r) //回溯条件：当前节点为叶结点
+    &#123;
+        sum[id]=num[l];
+        return;
+    &#125;
+    int mid=(l+r)&gt;&gt;1;//位运算优化常数
+    build(id&lt;&lt;1,l,mid);//左子树构造
+    build(id&lt;&lt;1|1,mid+1,r);//右子树构造
+    sum[id]=sum[id&lt;&lt;1]+sum[id&lt;&lt;1|1];//更新父节点，各个题目条件不同，此处为区间和
+&#125;
+</code></pre>
+<p>二、lazy tag与区间修改</p>
+<p>在区间修改时倘若我们采取将区间内的每个点修改再回溯，无异于再重新建造一棵线段树，复杂度为O（mnlogn），甚至高于了朴素算法，因此我们需要引入lazy tag，将复杂度维持在O（nlogn）</p>
+<pre><code>void pushdown(int id,int l,int r,int ql,int qr)
+&#123;
+    if(add[id]==0)
+    return;
+    int mid=(l+r)&gt;&gt;1;
+    add[id&lt;&lt;1]+=add[id];
+    sum[id&lt;&lt;1]+=(mid-l+1)*add[id];
+    add[id&lt;&lt;1|1]+=add[id];
+    sum[id&lt;&lt;1|1]+=(r-mid)*add[id];
+    add[id]=0;
+&#125;
+void update(int id,int l,int r,int ql,int qr,int v)
+&#123;
+    if(l&gt;qr || r&lt;ql)//回溯条件两区间无交集
+    return;
+    if(l&gt;=ql &amp;&amp; r&lt;=qr)
+    &#123;
+        add[id]+=v;
+        sum[id]+=(r-l+1)*v;
+        return;
+    &#125;//询问区间包含当前区间，更新lazy tag和sum后即可回溯
+    pushdown(id,l,r,ql,qr);
+    int mid=(l+r)&gt;&gt;1;
+    update(id&lt;&lt;1,l,mid,ql,qr,v);
+    update(id&lt;&lt;1|1,mid+1,r,ql,qr,v);
+    sum[id]=sum[id&lt;&lt;1]+sum[id&lt;&lt;1|1];
+&#125;
+</code></pre>
+<p>三、区间查询</p>
+<pre><code>int query(int id,int l,int r,int ql,int qr)
+ &#123;
+    if(l&gt;qr || r&lt;ql)//无交集返回0；
+    return 0;
+    if(l&gt;=ql &amp;&amp; r&lt;=qr)//完全包含；
+    return sum[id];
+    pushdown(id,l,r,ql,qr);
+    int mid=(l+r)&gt;&gt;1;
+    return         query(id&lt;&lt;1,l,mid,ql,qr)+query(id&lt;&lt;1|1,mid+1,r,ql,qr);//部分包含；
+ &#125;
+</code></pre>
+<p>例题 P3373<br>article-name.png<br><img src="/images/pasted-2.png" alt="upload successful"></p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://example.com">Charles Ding</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://example.com/2022/01/16/2022%E5%AF%92%E5%81%87%E9%9B%86%E8%AE%ADday4-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%BF%E6%AE%B5%E6%A0%91/">http://example.com/2022/01/16/2022%E5%AF%92%E5%81%87%E9%9B%86%E8%AE%ADday4-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%BF%E6%AE%B5%E6%A0%91/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2022/01/16/article-name/"><span class="paginator-prev__text">2022 寒假集训线段树</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/icons/博客头像.png" alt="avatar"></div><p class="sidebar-ov-author__text">纯白不备</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">3</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">0</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">0</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2022</span><span class="footer__devider"></span><span>Charles Ding</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
